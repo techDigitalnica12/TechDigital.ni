@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Store (R) - Recargas & Streaming</title>
+  <style>
+    :root {
+      --primary: #8a2be2;
+      --primary-glow: #00ffff;
+      --accent-green: #25d366;
+      --card-bg: rgba(18, 20, 32, 0.9);
+      --card-border: #1f2438;
+      --text: #ffffff;
+      --subtext: #a0a5c0;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Rajdhani', 'Segoe UI', sans-serif; }
+    
+    body {
+      background: linear-gradient(-45deg, #090a10, #130a2a, #0a1c2a, #1a0926);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      color: var(--text);
+      padding: 15px;
+      min-height: 100vh;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 25px;
+      background: rgba(16, 18, 33, 0.85);
+      border-radius: 14px;
+      margin-bottom: 20px;
+      border: 1px solid #2a314e;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+    }
+    
+    .logo-text {
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      animation: colorShiftSlow 12s infinite alternate;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .r-container {
+      position: relative;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .r-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      border-top-color: #ff007f;
+      border-right-color: #00ffff;
+      border-bottom-color: #ffea00;
+      border-left-color: #7928ca;
+      animation: spinRing 2s linear infinite;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+
+    .logo-r {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #000;
+      color: #fff;
+      font-weight: 900;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      animation: intenseGlow 2.5s infinite alternate;
+      text-shadow: 0 0 8px #fff;
+    }
+
+    @keyframes spinRing {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes intenseGlow {
+      0% { box-shadow: inset 0 0 10px #ff007f, 0 0 15px #ff007f; color: #ffffff; }
+      50% { box-shadow: inset 0 0 15px #00ffff, 0 0 25px #00ffff; color: #00ffff; }
+      100% { box-shadow: inset 0 0 10px #ffea00, 0 0 20px #ffea00; color: #ffea00; }
+    }
+
+    @keyframes colorShiftSlow {
+      0% { color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.5); }
+      33% { color: #ff007f; text-shadow: 0 0 10px rgba(255,0,127,0.5); }
+      66% { color: #9d4edd; text-shadow: 0 0 10px rgba(157,78,221,0.5); }
+      100% { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.5); }
+    }
+
+    .rate-badge {
+      background: #1a1e36;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      border: 1px solid #00ffff;
+      color: #00ffff;
+      box-shadow: 0 0 12px rgba(0,255,255,0.3);
+    }
+
+    .tabs-wrapper { overflow-x: auto; margin-bottom: 25px; padding-bottom: 8px; }
+    .tabs-wrapper::-webkit-scrollbar { height: 6px; }
+    .tabs-wrapper::-webkit-scrollbar-thumb { background: #2a314e; border-radius: 4px; }
+    .tabs { display: flex; gap: 12px; width: max-content; }
+    .tab-btn {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      font-size: 15px;
+      backdrop-filter: blur(5px);
+    }
+    .tab-btn img { width: 26px; height: 26px; border-radius: 6px; object-fit: cover; }
+    .tab-btn:hover { border-color: var(--primary-glow); background: #181b2e; transform: translateY(-2px); }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #7928ca 0%, #4a00e0 100%);
+      border-color: #00ffff;
+      box-shadow: 0 0 15px rgba(121,40,202,0.7);
+    }
+
+    .form-container {
+      background-color: var(--card-bg);
+      padding: 25px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      max-width: 750px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .game-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .game-header img { width: 45px; height: 45px; border-radius: 10px; border: 2px solid #00ffff; object-fit: cover; }
+    .game-header h2 { font-size: 24px; color: #fff; text-shadow: 0 0 8px rgba(255,255,255,0.2); }
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 25px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+    .packages-grid::-webkit-scrollbar { width: 6px; }
+    .packages-grid::-webkit-scrollbar-thumb { background: #00ffff; border-radius: 4px; }
+
+    .pkg-card {
+      background-color: rgba(22, 25, 41, 0.8);
+      border: 2px solid var(--card-border);
+      border-radius: 12px;
+      padding: 14px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.25s ease;
+    }
+    .pkg-card:hover { border-color: #00ffff; transform: translateY(-3px); box-shadow: 0 0 12px rgba(0,255,255,0.3); }
+    .pkg-card.selected { border-color: #ff007f; background-color: rgba(34, 20, 46, 0.9); box-shadow: 0 0 15px rgba(255,0,127,0.4); }
+    .pkg-title { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+    .pkg-nio { color: #00ff88; font-size: 16px; font-weight: 800; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 14px; color: #d1d5db; }
+    .form-group input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background-color: #181b2e;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.3s;
+    }
+    .form-group input:focus { border-color: #00ffff; box-shadow: 0 0 8px rgba(0,255,255,0.3); }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .pay-card {
+      background-color: #181b2e;
+      border: 2px solid var(--card-border);
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .pay-card img { height: 28px; object-fit: contain; max-width: 90%; }
+    .pay-card span { font-size: 12px; font-weight: 700; color: #a0a5c0; }
+    .pay-card:hover { border-color: #00ffff; }
+    .pay-card.selected { border-color: #00ff88; background-color: #0d2822; box-shadow: 0 0 10px rgba(0,255,136,0.3); }
+    .pay-card.selected span { color: #00ff88; }
+
+    .summary-box {
+      background: linear-gradient(135deg, #181b2e 0%, #101221 100%);
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 20px;
+    }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #a0a5c0; }
+    .summary-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; border-top: 1px solid var(--card-border); padding-top: 12px; margin-top: 8px; color: #00ff88; }
+
+    .terms-box {
+      background-color: rgba(24, 27, 46, 0.6);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #a0a5c0;
+      line-height: 1.5;
+    }
+    .terms-box h4 {
+      color: #00ffff;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .btn-buy {
+      width: 100%;
+      background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 800;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(37,211,102,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .btn-buy:hover { transform: scale(1.02); box-shadow: 0 0 25px rgba(37,211,102,0.7); }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <div class="logo-text">
+      Tech Store 
+      <div class="r-container">
+        <div class="r-ring"></div>
+        <div class="logo-r">R</div>
+      </div>
+    </div>
+    <div class="rate-badge">Moneda: <b>Córdobas (NIO)</b></div>
+  </header>
+
+  <div class="tabs-wrapper">
+    <div class="tabs" id="tabs-container"></div>
+  </div>
+
+  <div class="form-container">
+    <div id="game-title-header" class="game-header"></div>
+    
+    <label style="display:block; margin-bottom:12px; font-weight:700; color:#fff;">Selecciona un Paquete / Opción Oficial:</label>
+    <div class="packages-grid" id="packages-container"></div>
+
+    <div class="form-group">
+      <label for="player-name">Nombre del Cliente / Nickname:</label>
+      <input type="text" id="player-name" placeholder="Ej: Carlos López">
+    </div>
+
+    <div class="form-group" id="id-group">
+      <label id="id-label" for="user-id">Player ID / ID / Correo:</label>
+      <input type="text" id="user-id" placeholder="Ej: 123456789">
+    </div>
+
+    <div class="form-group" id="zone-group" style="display: none;">
+      <label for="zone-id">Zone ID (Solo Mobile Legends):</label>
+      <input type="text" id="zone-id" placeholder="Ej: 1234">
+    </div>
+
+    <div class="form-group">
+      <label for="item-qty">Cantidad de recargas a comprar:</label>
+      <input type="number" id="item-qty" value="1" min="1" max="100" onchange="updateTotal()" onkeyup="updateTotal()">
+    </div>
+
+    <label style="display:block; margin-bottom:12px; font-weight:700; color:#fff;">Selecciona tu Método de Pago:</label>
+    <div class="payment-grid" id="payment-container"></div>
+
+    <div class="summary-box">
+      <div class="summary-row">
+        <span>Servicio:</span>
+        <span id="sum-product" style="color:#fff; font-weight:700;">-</span>
+      </div>
+      <div class="summary-row">
+        <span>Método de Pago:</span>
+        <span id="sum-method" style="color:#00ffff; font-weight:700;">-</span>
+      </div>
+      <div class="summary-row">
+        <span>Precio Unitario:</span>
+        <span id="sum-unit-price">C$ 0.00 NIO</span>
+      </div>
+      <div class="summary-total">
+        <span>Total a Pagar:</span>
+        <span id="sum-total">C$ 0.00 NIO</span>
+      </div>
+    </div>
+
+    <div class="terms-box">
+      <h4>📜 Términos y Condiciones</h4>
+      <p>• Asegúrate de verificar minuciosamente los datos ingresados (ID, Nickname, Servidor o Correo) antes de confirmar tu pedido.</p>
+      <p>• No nos hacemos responsables por entregas a IDs o cuentas ingresadas incorrectamente por el cliente.</p>
+      <p>• Los tiempos de procesamiento pueden variar según la disponibilidad y método de pago seleccionado.</p>
+      <p>• Al hacer clic en "Enviar Pedido a WhatsApp", confirmas que estás de acuerdo con la información del pedido y nuestros términos.</p>
+    </div>
+
+    <button class="btn-buy" onclick="sendToWhatsApp()">🛒 Enviar Pedido a WhatsApp</button>
+  </div>
+
+  <script>
+    const EXCHANGE_RATE = 41.50;
+    const PHONE_NUMBER_ENCODED = "NTA2NjM2MDc0MDA=";
+
+    const paymentMethods = [
+      { id: "paypal", name: "PayPal", logo: "pago-paypal.png" },
+      { id: "binance", name: "Binance / Crypto", logo: "pago-binance.png" },
+      { id: "openbank", name: "Openbank", logo: "pago-openbank.png" },
+      { id: "banpro", name: "Banpro", logo: "pago-banpro.png" },
+      { id: "lafise", name: "LAFISE", logo: "pago-lafise.png" },
+      { id: "monis", name: "Monis", logo: "pago-monis.png" },
+      { id: "nequi", name: "Nequi", logo: "pago-nequi.png" },
+      { id: "breb", name: "Bre-B", logo: "pago-breb.png" },
+      { id: "oxxo", name: "OXXO", logo: "pago-oxxo.png" },
+      { id: "billeteramovil", name: "Billetera Móvil", logo: "pago-billeteramovil.png" }
+    ];
+
+    const gamesData = [
+      {
+        id: "ff",
+        name: "Free Fire",
+        logo: "logo-free-fire.png",
+        idLabel: "Player ID (UID):",
+        idPlaceholder: "Ej: 123456789",
+        packages: [
+          { name: "100 Diamantes", usd: 0.99 },
+          { name: "310 Diamantes", usd: 2.99 },
+          { name: "520 Diamantes", usd: 4.99 },
+          { name: "1,060 Diamantes", usd: 9.99 },
+          { name: "2,180 Diamantes", usd: 19.99 },
+          { name: "5,600 Diamantes", usd: 49.99 },
+          { name: "11,200 Diamantes", usd: 99.99 },
+          { name: "Pase Booyah", usd: 4.49 },
+          { name: "Pase Booyah Premium", usd: 8.99 },
+          { name: "Tarjeta Semanal", usd: 1.99 },
+          { name: "Tarjeta Mensual", usd: 9.99 }
+        ]
+      },
+      {
+        id: "ml",
+        name: "Mobile Legends",
+        logo: "logo-mobile-legends.png",
+        idLabel: "User ID:",
+        idPlaceholder: "Ej: 987654321",
+        needsZone: true,
+        packages: [
+          { name: "11 Diamantes", usd: 0.29 },
+          { name: "56 Diamantes", usd: 0.99 },
+          { name: "86 Diamantes", usd: 1.49 },
+          { name: "172 Diamantes", usd: 2.99 },
+          { name: "257 Diamantes", usd: 4.49 },
+          { name: "343 Diamantes", usd: 5.99 },
+          { name: "429 Diamantes", usd: 7.49 },
+          { name: "514 Diamantes", usd: 8.99 },
+          { name: "706 Diamantes", usd: 11.99 },
+          { name: "878 Diamantes", usd: 14.99 },
+          { name: "1,412 Diamantes", usd: 23.99 },
+          { name: "2,195 Diamantes", usd: 34.99 },
+          { name: "3,688 Diamantes", usd: 59.99 },
+          { name: "5,532 Diamantes", usd: 89.99 },
+          { name: "9,288 Diamantes", usd: 149.99 },
+          { name: "Pase Semanal de Diamantes", usd: 1.99 },
+          { name: "Twilight Pass", usd: 9.99 }
+        ]
+      },
+      {
+        id: "pubg",
+        name: "PUBG Mobile",
+        logo: "logo-pubg-mobile.png",
+        idLabel: "Character ID:",
+        idPlaceholder: "Ej: 512345678",
+        packages: [
+          { name: "60 UC", usd: 0.99 },
+          { name: "300 + 25 UC", usd: 4.99 },
+          { name: "600 + 60 UC", usd: 9.99 },
+          { name: "1,500 + 300 UC", usd: 24.99 },
+          { name: "3,000 + 850 UC", usd: 49.99 },
+          { name: "6,000 + 2,100 UC", usd: 99.99 },
+          { name: "12,000 + 4,200 UC", usd: 199.99 },
+          { name: "Royale Pass Pack", usd: 9.99 },
+          { name: "Elite Royale Pass", usd: 24.99 }
+        ]
+      },
+      {
+        id: "codm",
+        name: "COD Mobile",
+        logo: "logo-cod-mobile.png",
+        idLabel: "Player ID (UID):",
+        idPlaceholder: "Ej: 67491823101",
+        packages: [
+          { name: "80 CP", usd: 0.99 },
+          { name: "420 CP", usd: 4.99 },
+          { name: "880 CP", usd: 9.99 },
+          { name: "2,400 CP", usd: 24.99 },
+          { name: "5,000 CP", usd: 49.99 },
+          { name: "10,800 CP", usd: 99.99 },
+          { name: "Pase de Batalla Básico", usd: 6.99 },
+          { name: "Pase de Batalla Premium", usd: 14.99 }
+        ]
+      },
+      {
+        id: "genshin",
+        name: "Genshin Impact",
+        logo: "logo-genshin-impact.png",
+        idLabel: "UID (ID de Jugador):",
+        idPlaceholder: "Ej: 700123456",
+        packages: [
+          { name: "60 Cristales Génesis", usd: 0.99 },
+          { name: "300 + 30 Cristales", usd: 4.99 },
+          { name: "980 + 110 Cristales", usd: 14.99 },
+          { name: "1,980 + 260 Cristales", usd: 29.99 },
+          { name: "3,280 + 600 Cristales", usd: 49.99 },
+          { name: "6,480 + 1,600 Cristales", usd: 99.99 },
+          { name: "Bendición de la Luna Nueva", usd: 4.99 },
+          { name: "Pase de Batalla PB Himno", usd: 9.99 }
+        ]
+      },
+      {
+        id: "hok",
+        name: "Honor of Kings",
+        logo: "logo-honor-of-kings.png",
+        idLabel: "UID del Jugador:",
+        idPlaceholder: "Ej: 102938475",
+        packages: [
+          { name: "16 Fichas", usd: 0.29 },
+          { name: "80 Fichas", usd: 0.99 },
+          { name: "240 + 17 Fichas", usd: 2.99 },
+          { name: "400 + 32 Fichas", usd: 4.99 },
+          { name: "800 + 80 Fichas", usd: 9.99 },
+          { name: "1,200 + 130 Fichas", usd: 14.99 },
+          { name: "2,400 + 260 Fichas", usd: 29.99 },
+          { name: "4,000 + 480 Fichas", usd: 49.99 },
+          { name: "8,000 + 1,160 Fichas", usd: 99.99 }
+        ]
+      },
+      {
+        id: "roblox",
+        name: "Roblox",
+        logo: "logo-roblox.png",
+        idLabel: "Usuario de Roblox:",
+        idPlaceholder: "Ej: MiUsuario123",
+        packages: [
+          { name: "80 Robux", usd: 0.99 },
+          { name: "400 Robux", usd: 4.99 },
+          { name: "800 Robux", usd: 9.99 },
+          { name: "1,700 Robux", usd: 19.99 },
+          { name: "4,500 Robux", usd: 49.99 },
+          { name: "10,000 Robux", usd: 99.99 },
+          { name: "22,500 Robux", usd: 199.99 }
+        ]
+      },
+      {
+        id: "bs",
+        name: "Blood Strike",
+        logo: "logo-blood-strike.png",
+        idLabel: "User ID:",
+        idPlaceholder: "Ej: 88210394",
+        packages: [
+          { name: "100 Oro", usd: 0.99 },
+          { name: "300 + 20 Oro", usd: 2.99 },
+          { name: "500 + 50 Oro", usd: 4.99 },
+          { name: "1,000 + 120 Oro", usd: 9.99 },
+          { name: "2,000 + 300 Oro", usd: 19.99 },
+          { name: "5,000 + 1,000 Oro", usd: 49.99 },
+          { name: "10,000 + 2,500 Oro", usd: 99.99 },
+          { name: "Pase de Batalla Básico", usd: 3.99 },
+          { name: "Pase de Batalla Ultra", usd: 8.99 }
+        ]
+      },
+      {
+        id: "cr",
+        name: "Clash of clans",
+        logo: "logo-clash-royale.png",
+        idLabel: "Player Tag (#):",
+        idPlaceholder: "Ej: #P98L20Q",
+        packages: [
+          { name: "80 Gemas", usd: 0.99 },
+          { name: "500 Gemas", usd: 4.99 },
+          { name: "1,200 Gemas", usd: 9.99 },
+          { name: "2,500 Gemas", usd: 19.99 },
+          { name: "6,500 Gemas", usd: 49.99 },
+          { name: "14,000 Gemas", usd: 99.99 },
+          { name: "Pase Diamante (Pass Royale)", usd: 11.99 },
+          { name: "Pase Oro", usd: 5.99 }
+        ]
+      },
+      {
+        id: "gplay",
+        name: "Google Play",
+        logo: "logo-google-play.png",
+        idLabel: "Correo / Cuenta:",
+        idPlaceholder: "Ej: usuario@gmail.com",
+        packages: [
+          { name: "Tarjeta $5 USD", usd: 5.00 },
+          { name: "Tarjeta $10 USD", usd: 10.00 },
+          { name: "Tarjeta $15 USD", usd: 15.00 },
+          { name: "Tarjeta $25 USD", usd: 25.00 },
+          { name: "Tarjeta $50 USD", usd: 50.00 },
+          { name: "Tarjeta $100 USD", usd: 100.00 }
+        ]
+      },
+      {
+        id: "netflix",
+        name: "Netflix",
+        logo: "logo-netflix.png",
+        idLabel: "Correo / WhatsApp:",
+        idPlaceholder: "Ej: cliente@gmail.com o +505...",
+        packages: [
+          { name: "1 Perfil HD/4K (1 Mes)", usd: 3.50 },
+          { name: "2 Perfiles HD/4K (1 Mes)", usd: 6.50 },
+          { name: "Cuenta Completa Bási. (1 Mes)", usd: 8.99 },
+          { name: "Cuenta Completa Estándar (1 Mes)", usd: 10.99 },
+          { name: "Cuenta Completa Premium 4K (1 Mes)", usd: 13.99 },
+          { name: "1 Perfil HD/4K (3 Meses)", usd: 9.50 },
+          { name: "1 Perfil HD/4K (6 Meses)", usd: 18.00 }
+        ]
+      },
+      {
+        id: "spotify",
+        name: "Spotify Premium",
+        logo: "logo-spotify.png",
+        idLabel: "Correo de Cuenta:",
+        idPlaceholder: "Ej: tu_cuenta@gmail.com",
+        packages: [
+          { name: "1 Mes Individual", usd: 2.99 },
+          { name: "2 Meses Individual", usd: 5.50 },
+          { name: "3 Meses Individual", usd: 7.99 },
+          { name: "6 Meses Individual", usd: 14.99 },
+          { name: "12 Meses Individual", usd: 26.99 },
+          { name: "Plan Familiar (1 Mes)", usd: 5.50 },
+          { name: "Plan Dúo (1 Mes)", usd: 4.50 }
+        ]
+      },
+      {
+        id: "disney",
+        name: "Disney+",
+        logo: "logo-disney.png",
+        idLabel: "Correo / Perfil:",
+        idPlaceholder: "Ej: cliente@gmail.com",
+        packages: [
+          { name: "1 Perfil Estándar (1 Mes)", usd: 2.50 },
+          { name: "1 Perfil Premium 4K (1 Mes)", usd: 3.50 },
+          { name: "Cuenta Completa Estándar (1 Mes)", usd: 6.99 },
+          { name: "Cuenta Completa Premium 4K (1 Mes)", usd: 9.99 },
+          { name: "Combo Disney+ & Star+ (1 Mes)", usd: 4.50 }
+        ]
+      },
+      {
+        id: "hbomax",
+        name: "Max (HBO)",
+        logo: "logo-max.png",
+        idLabel: "Correo / Datos de contacto:",
+        idPlaceholder: "Ej: cliente@gmail.com",
+        packages: [
+          { name: "1 Perfil Estándar (1 Mes)", usd: 2.50 },
+          { name: "1 Perfil Platino 4K (1 Mes)", usd: 3.50 },
+          { name: "Cuenta Completa Estándar (1 Mes)", usd: 6.99 },
+          { name: "Cuenta Completa Platino 4K (1 Mes)", usd: 9.99 },
+          { name: "1 Perfil Estándar (3 Meses)", usd: 6.50 }
+        ]
+      },
+      {
+        id: "youtube",
+        name: "YouTube Premium",
+        logo: "logo-youtube.png",
+        idLabel: "Correo de Gmail:",
+        idPlaceholder: "Ej: mi_gmail@gmail.com",
+        packages: [
+          { name: "1 Mes Individual", usd: 2.99 },
+          { name: "3 Meses Individual", usd: 6.99 },
+          { name: "4 Meses Individual", usd: 8.99 },
+          { name: "6 Meses Individual", usd: 12.99 },
+          { name: "12 Meses Individual", usd: 22.99 },
+          { name: "Plan Familiar (1 Mes)", usd: 5.99 }
+        ]
+      },
+      {
+        id: "crunchyroll",
+        name: "Crunchyroll",
+        logo: "logo-crunchyroll.png",
+        idLabel: "Correo de Cuenta:",
+        idPlaceholder: "Ej: fan_anime@gmail.com",
+        packages: [
+          { name: "1 Mes Plan Fan", usd: 2.50 },
+          { name: "1 Mes Plan Mega Fan", usd: 3.50 },
+          { name: "3 Meses Mega Fan", usd: 8.99 },
+          { name: "6 Meses Mega Fan", usd: 15.99 },
+          { name: "12 Meses Mega Fan", usd: 28.99 }
+        ]
+      },
+      {
+        id: "primevideo",
+        name: "Prime Video",
+        logo: "logo-prime-video.png",
+        idLabel: "Correo de Envíos:",
+        idPlaceholder: "Ej: mi_correo@gmail.com",
+        packages: [
+          { name: "1 Perfil HD (1 Mes)", usd: 2.00 },
+          { name: "Cuenta Completa (1 Mes)", usd: 4.99 },
+          { name: "1 Perfil HD (3 Meses)", usd: 5.50 },
+          { name: "Cuenta Completa (3 Meses)", usd: 12.99 }
+        ]
+      }
+    ];
+
+    let currentGame = gamesData[0];
+    let selectedPackage = currentGame.packages[0];
+    let selectedPayment = paymentMethods[0];
+
+    function init() {
+      const tabsContainer = document.getElementById('tabs-container');
+      tabsContainer.innerHTML = '';
+      
+      gamesData.forEach((game, idx) => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${idx === 0 ? 'active' : ''}`;
+        btn.innerHTML = `<img src="${game.logo}" alt="${game.name}"> <span>${game.name}</span>`;
+        btn.onclick = () => selectGame(game, btn);
+        tabsContainer.appendChild(btn);
+      });
+
+      const payContainer = document.getElementById('payment-container');
+      payContainer.innerHTML = '';
+      paymentMethods.forEach((method, idx) => {
+        const card = document.createElement('div');
+        card.className = `pay-card ${idx === 0 ? 'selected' : ''}`;
+        card.innerHTML = `<img src="${method.logo}" alt="${method.name}"><span>${method.name}</span>`;
+        card.onclick = () => {
+          document.querySelectorAll('.pay-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedPayment = method;
+          updateTotal();
+        };
+        payContainer.appendChild(card);
+      });
+
+      renderGame();
+    }
+
+    function selectGame(game, btnElement) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+      currentGame = game;
+      selectedPackage = game.packages[0];
+      renderGame();
+    }
+
+    function renderGame() {
+      document.getElementById('game-title-header').innerHTML = `<img src="${currentGame.logo}"> <h2>Adquirir ${currentGame.name}</h2>`;
+      document.getElementById('id-label').innerText = currentGame.idLabel;
+      document.getElementById('user-id').placeholder = currentGame.idPlaceholder;
+      document.getElementById('user-id').value = '';
+
+      const zoneGroup = document.getElementById('zone-group');
+      if (currentGame.needsZone) {
+        zoneGroup.style.display = 'block';
+        document.getElementById('zone-id').value = '';
+      } else {
+        zoneGroup.style.display = 'none';
+      }
+
+      const pkgContainer = document.getElementById('packages-container');
+      pkgContainer.innerHTML = '';
+
+      currentGame.packages.forEach((pkg, idx) => {
+        const nioPrice = (pkg.usd * EXCHANGE_RATE).toFixed(2);
+        const card = document.createElement('div');
+        card.className = `pkg-card ${idx === 0 ? 'selected' : ''}`;
+        card.innerHTML = `
+          <div class="pkg-title">${pkg.name}</div>
+          <div class="pkg-nio">C$ ${nioPrice} NIO</div>
+        `;
+        card.onclick = () => {
+          document.querySelectorAll('.pkg-card').forEach(c => c.classList.remove('selected'));
+          card.classList.add('selected');
+          selectedPackage = pkg;
+          updateTotal();
+        };
+        pkgContainer.appendChild(card);
+      });
+
+      updateTotal();
+    }
+
+    function updateTotal() {
+      const qty = parseInt(document.getElementById('item-qty').value) || 1;
+      const unitNIO = (selectedPackage.usd * EXCHANGE_RATE).toFixed(2);
+      const totalNIO = (selectedPackage.usd * EXCHANGE_RATE * qty).toFixed(2);
+
+      document.getElementById('sum-product').innerText = `${currentGame.name} - ${selectedPackage.name}`;
+      document.getElementById('sum-method').innerText = selectedPayment.name;
+      document.getElementById('sum-unit-price').innerText = `C$ ${unitNIO} NIO`;
+      document.getElementById('sum-total').innerText = `C$ ${totalNIO} NIO`;
+    }
+
+    function sendToWhatsApp() {
+      const playerName = document.getElementById('player-name').value.trim();
+      const userId = document.getElementById('user-id').value.trim();
+      const zoneId = document.getElementById('zone-id').value.trim();
+      const qty = document.getElementById('item-qty').value;
+      const unitNIO = (selectedPackage.usd * EXCHANGE_RATE).toFixed(2);
+      const totalNIO = (selectedPackage.usd * EXCHANGE_RATE * qty).toFixed(2);
+
+      if (!playerName) {
+        alert("Por favor ingresa tu Nombre / Nickname");
+        return;
+      }
+
+      if (!userId) {
+        alert("Por favor ingresa tu " + currentGame.idLabel);
+        return;
+      }
+
+      let message = `🛒 *NUEVO PEDIDO - TECH STORE (R)* 🛒\n\n`;
+      message += `🎮 *Servicio:* ${currentGame.name}\n`;
+      message += `📦 *Paquete/Opción:* ${selectedPackage.name}\n`;
+      message += `🔢 *Cantidad:* ${qty}\n\n`;
+      message += `👤 *DATOS DEL CLIENTE:*\n`;
+      message += `• *Nombre/Usuario:* ${playerName}\n`;
+      message += `• *${currentGame.idLabel}* ${userId}\n`;
+      
+      if (currentGame.needsZone && zoneId) {
+        message += `• *Zone ID:* ${zoneId}\n`;
+      }
+
+      message += `\n💳 *MÉTODO DE PAGO:* ${selectedPayment.name}\n`;
+
+      message += `\n💰 *DETALLES DEL PAGO:*\n`;
+      message += `• Precio unitario: C$ ${unitNIO} NIO\n`;
+      message += `• *Total a Pagar:* C$ ${totalNIO} NIO\n\n`;
+      message += `¡Quedo a la espera de los datos de pago para confirmar la compra por ${selectedPayment.name}!`;
+
+      const encodedMessage = encodeURIComponent(message);
+      const targetPhone = atob(PHONE_NUMBER_ENCODED);
+      const whatsappURL = `https://wa.me/${targetPhone}?text=${encodedMessage}`;
+      
+      window.open(whatsappURL, '_blank');
+    }
+
+    init();
+  </script>
+</body>
+</html>
