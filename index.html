@@ -1,3 +1,4 @@
+      
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -366,7 +367,11 @@
 
   <script>
     const EXCHANGE_RATE = 41.50;
-    const PHONE_NUMBER_ENCODED = "NTA2NjM2MDc0MDA=";
+    const PHONE_NUMBER_ENCODED = "S3RVTU5UTXdPRFF5TVE9PQ==";
+
+    function getDecodedPhone() {
+      return atob(atob(PHONE_NUMBER_ENCODED));
+    }
 
     const paymentMethods = [
       { id: "paypal", name: "PayPal", logo: "pago-paypal.png" },
@@ -801,7 +806,7 @@
       message += `¡Quedo a la espera de los datos de pago para confirmar la compra por ${selectedPayment.name}!`;
 
       const encodedMessage = encodeURIComponent(message);
-      const targetPhone = atob(PHONE_NUMBER_ENCODED);
+      const targetPhone = getDecodedPhone();
       const whatsappURL = `https://wa.me/${targetPhone}?text=${encodedMessage}`;
       
       window.open(whatsappURL, '_blank');
@@ -810,4 +815,4 @@
     init();
   </script>
 </body>
-      </html>
+</html>
