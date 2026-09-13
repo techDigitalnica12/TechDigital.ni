@@ -1,10 +1,10 @@
-      
+  
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tech Store (R) - Recargas & Streaming</title>
+  <title>Tech Store (iok) - Recargas & Streaming</title>
   <style>
     :root {
       --primary: #8a2be2;
@@ -367,10 +367,11 @@
 
   <script>
     const EXCHANGE_RATE = 41.50;
-    const PHONE_NUMBER_ENCODED = "S3RVTU5UTXdPRFF5TVE9PQ==";
+    // +526634308422 encriptado en Base64 para protección ante scrapers
+    const PHONE_NUMBER_ENCODED = "KzUyNjYzNDMwODQyMg==";
 
     function getDecodedPhone() {
-      return atob(atob(PHONE_NUMBER_ENCODED));
+      return atob(PHONE_NUMBER_ENCODED).replace(/[^0-9]/g, '');
     }
 
     const paymentMethods = [
@@ -575,7 +576,7 @@
         name: "Netflix",
         logo: "logo-netflix.png",
         idLabel: "Correo / WhatsApp:",
-        idPlaceholder: "Ej: cliente@gmail.com o +505...",
+        idPlaceholder: "Ej: cliente@gmail.com o +52...",
         packages: [
           { name: "1 Perfil HD/4K (1 Mes)", usd: 3.50 },
           { name: "2 Perfiles HD/4K (1 Mes)", usd: 6.50 },
